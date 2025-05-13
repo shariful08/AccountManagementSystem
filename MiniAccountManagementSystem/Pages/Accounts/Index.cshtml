@@ -1,0 +1,30 @@
+﻿@page "/Accounts"
+@model IndexModel
+@{
+    ViewData["Title"] = "Account List";
+}
+
+
+<h2>Accounts</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Account Name</th>
+            <th>Code</th>
+            <th>Type</th>
+            <th>Remarks</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var acc in Model.Accounts)
+        {
+            <tr>
+                <td>@acc.AccountName</td>
+                <td>@acc.AccountCode</td>
+                <td>@acc.AccountType</td>
+                <td>@acc.Remarks</td>
+            </tr>
+        }
+    </tbody>
+</table>
