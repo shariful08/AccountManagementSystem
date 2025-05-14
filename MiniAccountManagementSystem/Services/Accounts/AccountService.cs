@@ -15,7 +15,7 @@ namespace MiniAccountManagementSystem.Services.Accounts
 
         public Task<List<AccountModel>> GetAllAccountsAsync() => _repository.GetAllAccountsAsync();
 
-        public Task AddOrUpdateAccountAsync(AccountModel account) => _repository.AddAccountAsync(account);
+        public Task AddAccountAsync(AccountModel account) => _repository.AddAccountAsync(account);
     }
 
 }
