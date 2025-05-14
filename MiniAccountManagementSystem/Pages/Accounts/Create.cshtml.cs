@@ -23,6 +23,17 @@ namespace MiniAccountManagementSystem.Pages.Accounts
             Account = new AccountModel();
         }
 
+        // GET for Edit
+        public async Task<IActionResult> OnGetEditAsync(int id)
+        {
+            var accounts = await _accountService.GetAllAccountsAsync();
+            Account = accounts.FirstOrDefault(a => a.AccountId == id);
+            if (Account == null)
+            {
+                return NotFound();
+            }
+            return Page();
+        }
         public async Task<IActionResult> OnPostAsync()
         {
             try
@@ -43,9 +54,32 @@ namespace MiniAccountManagementSystem.Pages.Accounts
                 ErrorMessage = "Something went wrong. Please contact support.";
                 return Page();
             }
-            if (!ModelState.IsValid)
-                return Page();
+            
 
+            
+        }
+        // POST for Update
+        public async Task<IActionResult> OnPostUpdateAsync()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return Page();
+
+                Account.UpdatedDate = DateTime.Now;
+                Account.UpdatedBy = "admin";
+                Account.UpdatedPc = 1;
+
+                await _accountService.UpdateAccountAsync(Account);
+
+                return RedirectToPage("Index");
+            }
+            catch (Exception ex)
+            {
+                // Optional: Log here too
+                ErrorMessage = "Something went wrong. Please contact support.";
+                return Page();
+            }
             
         }
     }

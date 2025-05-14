@@ -38,6 +38,8 @@ public class AccountRepository : IAccountRepository
                             // Add the account to the list
                             var account = new AccountModel
                             {
+                                AccountId = Convert.ToInt32(reader["AccountId"]),
+                                AccountCode = reader["AccountCode"].ToString(),
                                 AccountName = reader["AccountName"].ToString()
                                 // Map other properties here
                             };
@@ -72,6 +74,34 @@ public class AccountRepository : IAccountRepository
             cmd.Parameters.AddWithValue("@AddedDate", model.AddedDate);
             cmd.Parameters.AddWithValue("@AddedPc", model.AddedPc);
             cmd.Parameters.AddWithValue("@AddedBy", model.AddedBy);
+            cmd.Parameters.AddWithValue("@UpdatedDate", (object)model.UpdatedDate ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@UpdatedPc", (object)model.UpdatedPc ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@UpdatedBy", (object)model.UpdatedBy ?? DBNull.Value);
+
+            await conn.OpenAsync();
+            await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
+    public async Task UpdateAccountAsync(AccountModel model)
+    {
+        using (SqlConnection conn = new SqlConnection(_connectionString))
+        {
+            SqlCommand cmd = new SqlCommand("sp_ManageChartOfAccounts", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@QueryType", "UPDATE");
+
+            cmd.Parameters.AddWithValue("@AccountId", model.AccountId);
+            cmd.Parameters.AddWithValue("@AccountName", model.AccountName);
+            cmd.Parameters.AddWithValue("@AccountCode", model.AccountCode);
+            cmd.Parameters.AddWithValue("@ParentAccountId", (object)model.ParentAccountId ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@AccountType", model.AccountType);
+            cmd.Parameters.AddWithValue("@Remarks", (object)model.Remarks ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Revision", model.Revision);
+            cmd.Parameters.AddWithValue("@AddedDate", (object)model.AddedDate ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@AddedPc", (object)model.AddedPc ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@AddedBy", (object)model.AddedBy ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@UpdatedDate", (object)model.UpdatedDate ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@UpdatedPc", (object)model.UpdatedPc ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@UpdatedBy", (object)model.UpdatedBy ?? DBNull.Value);

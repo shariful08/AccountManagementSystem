@@ -1,5 +1,8 @@
-﻿@page
+﻿@* @page
 @model MiniAccountManagementSystem.Pages.Accounts.CreateModel
+@page "{handler?}/{id?}"
+@model MiniAccountManagementSystem.Pages.Accounts.CreateModel
+
 @{
     ViewData["Title"] = "Create Account";
 }
@@ -44,3 +47,59 @@
     <button type="submit" class="btn btn-success">Save</button>
     <a asp-page="Index" class="btn btn-secondary">Cancel</a>
 </form>
+ *@
+
+@page "{handler?}/{id?}"
+@model MiniAccountManagementSystem.Pages.Accounts.CreateModel
+
+@{
+    var isEdit = Model.Account.AccountId > 0;
+    ViewData["Title"] = isEdit ? "Edit Account" : "Create Account";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @Model.ErrorMessage
+    </div>
+}
+
+<form method="post" asp-page-handler="@(isEdit ? "Update" : "Create")">
+    <input type="hidden" asp-for="Account.AccountId" />
+
+    <div class="form-group">
+        <label asp-for="Account.AccountName"></label>
+        <input asp-for="Account.AccountName" class="form-control" />
+        <span asp-validation-for="Account.AccountName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Account.AccountCode"></label>
+        <input asp-for="Account.AccountCode" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Account.AccountType"></label>
+        <select asp-for="Account.AccountType" class="form-control">
+            <option value="">-- Select Type --</option>
+            <option>Asset</option>
+            <option>Liability</option>
+            <option>Income</option>
+            <option>Expense</option>
+            <option>Cash</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Account.Remarks"></label>
+        <textarea asp-for="Account.Remarks" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        @(isEdit ? "Update" : "Create")
+    </button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
