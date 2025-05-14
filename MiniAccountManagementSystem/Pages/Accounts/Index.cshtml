@@ -32,14 +32,20 @@
 </table>
  *@
 
- @page "/Accounts"
+@page "/Accounts"
 @model IndexModel
+
 @{
     ViewData["Title"] = "Account List";
 }
 
 <h2>Accounts</h2>
-
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @Model.ErrorMessage
+    </div>
+}
 <a asp-page="Create" class="btn btn-primary mb-2">+ Add New Account</a>
 
 <table class="table table-bordered">
@@ -63,11 +69,11 @@
                 <td>
                     <a asp-page="Create" asp-page-handler="Edit" asp-route-id="@acc.AccountId" class="btn btn-sm btn-warning">Edit</a>
 
-                    <form method="post" asp-page-handler="Delete" asp-route-id="@acc.AccountId" style="display:inline;">
+                    <form method="post" asp-page="./Index" asp-page-handler="Delete" asp-route-id="@acc.AccountId">
                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?')">Delete</button>
                     </form>
 
-                    <a asp-page="Details" asp-route-id="@acc.AccountId" class="btn btn-sm btn-info">Details</a>
+                    @* <a asp-page="Details" asp-route-id="@acc.AccountId" class="btn btn-sm btn-info">Details</a> *@
                 </td>
             </tr>
         }

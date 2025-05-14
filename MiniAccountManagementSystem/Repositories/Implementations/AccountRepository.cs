@@ -110,4 +110,24 @@ public class AccountRepository : IAccountRepository
             await cmd.ExecuteNonQueryAsync();
         }
     }
+
+    public async Task DeleteAccountAsync(AccountModel model)
+    {
+        using (SqlConnection conn = new SqlConnection(_connectionString))
+        {
+            SqlCommand cmd = new SqlCommand("sp_ManageChartOfAccounts", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@QueryType", "DELETE");
+
+            cmd.Parameters.AddWithValue("@AccountId", model.AccountId);
+
+            cmd.Parameters.AddWithValue("@UpdatedDate", (object)model.UpdatedDate ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@UpdatedPc", (object)model.UpdatedPc ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@UpdatedBy", (object)model.UpdatedBy ?? DBNull.Value);
+
+            await conn.OpenAsync();
+            await cmd.ExecuteNonQueryAsync();
+        }
+    }
 }

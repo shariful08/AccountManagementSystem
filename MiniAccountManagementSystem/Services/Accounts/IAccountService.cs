@@ -9,6 +9,7 @@ namespace MiniAccountManagementSystem.Services.Accounts
         Task<List<AccountModel>> GetAllAccountsAsync();
         Task AddAccountAsync(AccountModel account);
         Task UpdateAccountAsync(AccountModel account);
+        Task DeleteAccountAsync(AccountModel account);
     }
 
 }

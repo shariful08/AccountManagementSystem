@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MiniAccountManagementSystem.Models;
 using MiniAccountManagementSystem.Services.Accounts;
@@ -22,7 +22,6 @@ namespace MiniAccountManagementSystem.Pages.Accounts
         {
             Account = new AccountModel();
         }
-
         // GET for Edit
         public async Task<IActionResult> OnGetEditAsync(int id)
         {
@@ -82,5 +81,6 @@ namespace MiniAccountManagementSystem.Pages.Accounts
             }
             
         }
+        
     }
 }
