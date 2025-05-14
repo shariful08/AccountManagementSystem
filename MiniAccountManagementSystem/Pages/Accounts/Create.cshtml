@@ -5,6 +5,12 @@
 }
 
 <h2>Create New Account</h2>
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @Model.ErrorMessage
+    </div>
+}
 
 <form method="post">
     <div class="form-group">
