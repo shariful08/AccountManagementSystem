@@ -17,6 +17,8 @@
         public DateTime? UpdatedDate { get; set; }
         public int? UpdatedPc { get; set; }
         public string? UpdatedBy { get; set; }
+
+        public List<AccountModel> Children { get; set; } = new();
     }
 
 }

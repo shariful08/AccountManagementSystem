@@ -1,61 +1,14 @@
-﻿@* @page
-@model MiniAccountManagementSystem.Pages.Accounts.CreateModel
-@page "{handler?}/{id?}"
-@model MiniAccountManagementSystem.Pages.Accounts.CreateModel
+﻿@page "{handler?}/{id?}"
+@attribute [Authorize(Roles = "admin")]
 
-@{
-    ViewData["Title"] = "Create Account";
-}
-
-<h2>Create New Account</h2>
-@if (!string.IsNullOrEmpty(Model.ErrorMessage))
-{
-    <div class="alert alert-danger">
-        @Model.ErrorMessage
-    </div>
-}
-
-<form method="post">
-    <div class="form-group">
-        <label>Account Name</label>
-        <input asp-for="Account.AccountName" class="form-control" />
-        <span asp-validation-for="Account.AccountName" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Account Code</label>
-        <input asp-for="Account.AccountCode" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Account Type</label>
-        <select asp-for="Account.AccountType" class="form-control">
-            <option value="">-- Select Type --</option>
-            <option>Asset</option>
-            <option>Liability</option>
-            <option>Income</option>
-            <option>Expense</option>
-            <option>Cash</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Remarks</label>
-        <textarea asp-for="Account.Remarks" class="form-control"></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-success">Save</button>
-    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
-</form>
- *@
-
-@page "{handler?}/{id?}"
+@using Microsoft.AspNetCore.Authorization
 @model MiniAccountManagementSystem.Pages.Accounts.CreateModel
 
 @{
     var isEdit = Model.Account.AccountId > 0;
     ViewData["Title"] = isEdit ? "Edit Account" : "Create Account";
 }
+
 
 <h2>@ViewData["Title"]</h2>
 

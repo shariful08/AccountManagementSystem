@@ -40,7 +40,10 @@ public class AccountRepository : IAccountRepository
                             {
                                 AccountId = Convert.ToInt32(reader["AccountId"]),
                                 AccountCode = reader["AccountCode"].ToString(),
-                                AccountName = reader["AccountName"].ToString()
+                                AccountName = reader["AccountName"].ToString(),
+                                ParentAccountId = reader["ParentAccountId"] as int?,
+                                AccountType = reader["AccountType"].ToString(),
+                                Remarks = reader["Remarks"].ToString()
                                 // Map other properties here
                             };
                             accounts.Add(account);

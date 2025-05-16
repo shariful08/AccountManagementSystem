@@ -17,11 +17,24 @@ namespace MiniAccountManagementSystem.Pages.Accounts
             _accountService = accountService;
         }
 
-        public List<AccountModel> Accounts { get; set; } = new();
+        //public List<AccountModel> Accounts { get; set; } = new();
+        public List<AccountModel> AccountTree { get; set; } = new();
 
         public async Task OnGetAsync()
         {
-            Accounts = await _accountService.GetAllAccountsAsync();
+            var Accounts = await _accountService.GetAllAccountsAsync();
+            // Build tree
+            AccountTree = BuildAccountTree(null, Accounts);
+        }
+        private List<AccountModel> BuildAccountTree(int? parentId, List<AccountModel> allAccounts)
+        {
+            return allAccounts
+                .Where(a => a.ParentAccountId == parentId)
+                .Select(a => {
+                    a.Children = BuildAccountTree(a.AccountId, allAccounts);
+                    return a;
+                })
+                .ToList();
         }
 
         // ✅ Delete Handler

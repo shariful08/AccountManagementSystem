@@ -1,20 +1,43 @@
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using MiniAccountManagementSystem.Repositories;
+using MiniAccountManagementSystem.Repositories.Interfaces;
 using MiniAccountManagementSystem.Services.Accounts;
+using MiniAccountManagementSystem.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddRazorPages();
+
+// Dependency Injection
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
+//// Authentication
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//    .AddCookie(options =>
+//    {
+//        options.LoginPath = "/Login"; // Redirect to login if not authenticated
+//        options.AccessDeniedPath = "/AccessDenied"; // If role is insufficient
+//    });
+
+//builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//// Redirect "/" to "/Login"
+//app.MapGet("/", context =>
+//{
+//    context.Response.Redirect("Users/Login");
+//    return Task.CompletedTask;
+//});
+
+// Configure middleware pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -23,7 +46,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+//app.UseAuthentication();  
+//app.UseAuthorization();
 
 app.MapRazorPages();
 

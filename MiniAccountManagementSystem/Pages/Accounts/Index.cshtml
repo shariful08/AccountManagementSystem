@@ -1,38 +1,6 @@
-﻿@* @page "/Accounts"
-@model IndexModel
-@{
-    ViewData["Title"] = "Account List";
-}
+﻿
 
-
-<h2>Accounts</h2>
-
-<a asp-page="Create" class="btn btn-primary mb-2">+ Add New Account</a>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Account Name</th>
-            <th>Code</th>
-            <th>Type</th>
-            <th>Remarks</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var acc in Model.Accounts)
-        {
-            <tr>
-                <td>@acc.AccountName</td>
-                <td>@acc.AccountCode</td>
-                <td>@acc.AccountType</td>
-                <td>@acc.Remarks</td>
-            </tr>
-        }
-    </tbody>
-</table>
- *@
-
-@page "/Accounts"
+@* @page "/Accounts"
 @model IndexModel
 
 @{
@@ -74,8 +42,96 @@
                     </form>
 
                     @* <a asp-page="Details" asp-route-id="@acc.AccountId" class="btn btn-sm btn-info">Details</a> *@
+ @*                </td>
+            </tr>
+        }
+    </tbody>
+</table> *@
+
+@page "/Accounts"
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Account List";
+}
+
+<h2>Accounts</h2>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<a asp-page="Create" class="btn btn-primary mb-2">+ Add New Account</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Account Name</th>
+            <th>Code</th>
+            <th>Type</th>
+            <th>Remarks</th>
+            <th style="width: 200px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var acc in Model.AccountTree.SelectMany(Flatten))
+        {
+            <tr>
+                <td>
+                    @for (int i = 0; i < acc.Level; i++)
+                    {
+                        <text>&nbsp;&nbsp;&nbsp;&nbsp;</text>
+                    }
+                    @acc.AccountName
+                </td>
+                <td>@acc.AccountCode</td>
+                <td>@acc.AccountType</td>
+                <td>@acc.Remarks</td>
+                <td>
+                    <a asp-page="Create" asp-page-handler="Edit" asp-route-id="@acc.AccountId" class="btn btn-sm btn-warning">Edit</a>
+
+                    <form method="post" asp-page="./Index" asp-page-handler="Delete" asp-route-id="@acc.AccountId" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?')">Delete</button>
+                    </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@functions {
+    public class TreeAccount
+    {
+        public int AccountId { get; set; }
+        public string AccountName { get; set; }
+        public string AccountCode { get; set; }
+        public string AccountType { get; set; }
+        public string Remarks { get; set; }
+        public int Level { get; set; }
+    }
+
+    public IEnumerable<TreeAccount> Flatten(MiniAccountManagementSystem.Models.AccountModel node, int level = 0)
+    {
+        yield return new TreeAccount
+            {
+                AccountId = node.AccountId ?? 0,
+                AccountName = node.AccountName,
+                AccountCode = node.AccountCode,
+                AccountType = node.AccountType,
+                Remarks = node.Remarks,
+                Level = level
+            };
+
+        if (node.Children != null)
+        {
+            foreach (var child in node.Children)
+            {
+                foreach (var desc in Flatten(child, level + 1))
+                {
+                    yield return desc;
+                }
+            }
+        }
+    }
+}
