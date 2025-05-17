@@ -1,0 +1,49 @@
+﻿@page
+@model CreateModel
+
+<form method="post">
+    <input asp-for="VoucherEntries[0].VoucherDate" type="date" class="form-control" />
+    <input asp-for="VoucherEntries[0].ReferenceNo" placeholder="Reference No." class="form-control" />
+    <input asp-for="VoucherEntries[0].VoucherType" class="form-control" />
+
+    <table id="entryTable" class="table">
+        <thead>
+            <tr>
+                <th>Account ID</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Remarks</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- JS will add rows -->
+        </tbody>
+    </table>
+
+    <button type="button" onclick="addEntryRow()">Add Row</button>
+    <button type="submit">Submit</button>
+</form>
+
+@section Scripts {
+    <script>
+        let index = 0;
+        function addEntryRow() {
+            const table = document.querySelector("#entryTable tbody");
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td><input name="VoucherEntries[${index}].AccountID" type="number" class="form-control" /></td>
+                <td><input name="VoucherEntries[${index}].DebitAmount" type="number" class="form-control" /></td>
+                <td><input name="VoucherEntries[${index}].CreditAmount" type="number" class="form-control" /></td>
+                <td><input name="VoucherEntries[${index}].remarks" type="text" class="form-control" /></td>
+                <td><button type="button" onclick="this.closest('tr').remove()">Remove</button></td>
+            `;
+            table.appendChild(row);
+            index++;
+        }
+
+        // Add first row by default
+        window.onload = () => addEntryRow();
+    </script>
+}

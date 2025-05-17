@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using MiniAccountManagementSystem.Repositories;
+using MiniAccountManagementSystem.Repositories.Implementations;
 using MiniAccountManagementSystem.Repositories.Interfaces;
 using MiniAccountManagementSystem.Services.Accounts;
 using MiniAccountManagementSystem.Services.Users;
+using MiniAccountManagementSystem.Services.Vouchers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,8 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IVoucherService, VoucherService>();
+builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
 
 //// Authentication
 //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -30,12 +30,11 @@ public class AccountRepository : IAccountRepository
                 await conn.OpenAsync();
                 using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                 {
-                    if (reader.HasRows) // Ensure there are rows to read
+                    if (reader.HasRows) 
                     {
                         while (await reader.ReadAsync())
                         {
                             Console.WriteLine(reader["AccountName"]);
-                            // Add the account to the list
                             var account = new AccountModel
                             {
                                 AccountId = Convert.ToInt32(reader["AccountId"]),
@@ -44,7 +43,6 @@ public class AccountRepository : IAccountRepository
                                 ParentAccountId = reader["ParentAccountId"] as int?,
                                 AccountType = reader["AccountType"].ToString(),
                                 Remarks = reader["Remarks"].ToString()
-                                // Map other properties here
                             };
                             accounts.Add(account);
                         }

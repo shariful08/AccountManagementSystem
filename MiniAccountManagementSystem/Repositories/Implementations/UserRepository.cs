@@ -86,7 +86,6 @@ namespace MiniAccountManagementSystem.Repositories
 
             reader.Close();
 
-            // Load roles
             var roleCmd = new SqlCommand("SELECT r.RoleName FROM UserRoles ur JOIN Roles r ON ur.RoleId = r.Id WHERE ur.UserId = @UserId", conn);
             roleCmd.Parameters.AddWithValue("@UserId", user.Id);
             using var roleReader = await roleCmd.ExecuteReaderAsync();
