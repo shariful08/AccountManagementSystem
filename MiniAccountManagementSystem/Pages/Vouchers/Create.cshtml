@@ -1,14 +1,21 @@
 ﻿@page
 @model MiniAccountManagementSystem.Pages.Vouchers.CreateModel
+@{
+    var accountOptions = string.Join("", Model.VoucherEntry.AccountList.Select(a =>
+        $"<option value='{a.AccountId}'>{a.AccountName}</option>"));
+}
 
 
 
 <form method="post">
-    <input asp-for="VoucherEntry.VoucherMaster.VoucherNo" class="form-control" />
+    <input asp-for="VoucherEntry.VoucherMaster.VoucherNo" class="form-control" placeholder="VoucherNo" />
     <input asp-for="VoucherEntry.VoucherMaster.VoucherDate" class="form-control" type="date" />
-    <input asp-for="VoucherEntry.VoucherMaster.VoucherType" class="form-control" />
-    <input asp-for="VoucherEntry.VoucherMaster.Narration" class="form-control" />
-    <input asp-for="VoucherEntry.VoucherMaster.Remarks" class="form-control" />
+    <select asp-for="VoucherEntry.VoucherMaster.VoucherType" asp-items="Model.VoucherEntry.VoucherTypeList" class="form-control">
+        <option value="">-- Select Voucher Type --</option>
+    </select>
+
+    <input asp-for="VoucherEntry.VoucherMaster.Narration" class="form-control" placeholder="Narration" />
+    <input asp-for="VoucherEntry.VoucherMaster.Remarks" class="form-control" placeholder="Remarks"/>
 
     <table id="voucherDetails" class="table">
         <thead>
@@ -29,20 +36,27 @@
 @section Scripts {
     <script>
         let detailIndex = 0;
+        const accountOptions = `@Html.Raw(accountOptions)`;
 
         function addRow() {
             const table = document.querySelector('#voucherDetails tbody');
             const row = document.createElement('tr');
+
             row.innerHTML = `
-                <td><input name="VoucherEntry.VoucherDetails[${detailIndex}].AccountId" type="number" /></td>
+                <td>
+                    <select name="VoucherEntry.VoucherDetails[${detailIndex}].AccountId" class="form-control">
+                        <option value="">-- Select Account --</option>
+                        ${accountOptions}
+                    </select>
+                </td>
                 <td><input name="VoucherEntry.VoucherDetails[${detailIndex}].DebitAmount" type="number" step="0.01" /></td>
                 <td><input name="VoucherEntry.VoucherDetails[${detailIndex}].CreditAmount" type="number" step="0.01" /></td>
                 <td><input name="VoucherEntry.VoucherDetails[${detailIndex}].Remarks" /></td>
                 <td><button type="button" onclick="this.closest('tr').remove()">Remove</button></td>
             `;
+
             table.appendChild(row);
             detailIndex++;
         }
-
     </script>
 }
