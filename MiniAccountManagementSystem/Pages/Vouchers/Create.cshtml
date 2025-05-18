@@ -1,49 +1,48 @@
 ﻿@page
-@model CreateModel
+@model MiniAccountManagementSystem.Pages.Vouchers.CreateModel
+
+
 
 <form method="post">
-    <input asp-for="VoucherEntries[0].VoucherDate" type="date" class="form-control" />
-    <input asp-for="VoucherEntries[0].ReferenceNo" placeholder="Reference No." class="form-control" />
-    <input asp-for="VoucherEntries[0].VoucherType" class="form-control" />
+    <input asp-for="VoucherEntry.VoucherMaster.VoucherNo" class="form-control" />
+    <input asp-for="VoucherEntry.VoucherMaster.VoucherDate" class="form-control" type="date" />
+    <input asp-for="VoucherEntry.VoucherMaster.VoucherType" class="form-control" />
+    <input asp-for="VoucherEntry.VoucherMaster.Narration" class="form-control" />
+    <input asp-for="VoucherEntry.VoucherMaster.Remarks" class="form-control" />
 
-    <table id="entryTable" class="table">
+    <table id="voucherDetails" class="table">
         <thead>
             <tr>
-                <th>Account ID</th>
+                <th>Account</th>
                 <th>Debit</th>
                 <th>Credit</th>
                 <th>Remarks</th>
-                <th></th>
+                <th><button type="button" onclick="addRow()">Add</button></th>
             </tr>
         </thead>
-        <tbody>
-            <!-- JS will add rows -->
-        </tbody>
+        <tbody></tbody>
     </table>
 
-    <button type="button" onclick="addEntryRow()">Add Row</button>
-    <button type="submit">Submit</button>
+    <input type="submit" value="Save" class="btn btn-primary" />
 </form>
 
 @section Scripts {
     <script>
-        let index = 0;
-        function addEntryRow() {
-            const table = document.querySelector("#entryTable tbody");
-            const row = document.createElement("tr");
+        let detailIndex = 0;
 
+        function addRow() {
+            const table = document.querySelector('#voucherDetails tbody');
+            const row = document.createElement('tr');
             row.innerHTML = `
-                <td><input name="VoucherEntries[${index}].AccountID" type="number" class="form-control" /></td>
-                <td><input name="VoucherEntries[${index}].DebitAmount" type="number" class="form-control" /></td>
-                <td><input name="VoucherEntries[${index}].CreditAmount" type="number" class="form-control" /></td>
-                <td><input name="VoucherEntries[${index}].remarks" type="text" class="form-control" /></td>
+                <td><input name="VoucherEntry.VoucherDetails[${detailIndex}].AccountId" type="number" /></td>
+                <td><input name="VoucherEntry.VoucherDetails[${detailIndex}].DebitAmount" type="number" step="0.01" /></td>
+                <td><input name="VoucherEntry.VoucherDetails[${detailIndex}].CreditAmount" type="number" step="0.01" /></td>
+                <td><input name="VoucherEntry.VoucherDetails[${detailIndex}].Remarks" /></td>
                 <td><button type="button" onclick="this.closest('tr').remove()">Remove</button></td>
             `;
             table.appendChild(row);
-            index++;
+            detailIndex++;
         }
 
-        // Add first row by default
-        window.onload = () => addEntryRow();
     </script>
 }

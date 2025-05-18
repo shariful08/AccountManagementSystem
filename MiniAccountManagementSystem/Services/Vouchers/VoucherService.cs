@@ -1,18 +1,19 @@
 ﻿using MiniAccountManagementSystem.Models;
 using MiniAccountManagementSystem.Repositories.Interfaces;
 using MiniAccountManagementSystem.Services.Vouchers;
+using MiniAccountManagementSystem.ViewModels;
 
 public class VoucherService : IVoucherService
 {
-    private readonly IVoucherRepository _repo;
+    private readonly IVoucherRepository _repository;
 
-    public VoucherService(IVoucherRepository repo)
+    public VoucherService(IVoucherRepository repository)
     {
-        _repo = repo;
+        _repository = repository;
     }
 
-    public Task SaveVoucherAsync(List<VoucherModel> voucher)
+    public async Task<bool> SaveVoucherAsync(VoucherEntryViewModel model)
     {
-        return _repo.SaveVoucherAsync(voucher);
+        return await _repository.SaveVoucherAsync(model);
     }
 }

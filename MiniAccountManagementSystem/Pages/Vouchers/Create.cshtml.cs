@@ -1,29 +1,35 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MiniAccountManagementSystem.Models;
-using MiniAccountManagementSystem.Services;
+using Microsoft.AspNetCore.Mvc;
 using MiniAccountManagementSystem.Services.Vouchers;
+using MiniAccountManagementSystem.ViewModels;
 
-public class CreateModel : PageModel
+namespace MiniAccountManagementSystem.Pages.Vouchers
 {
-    private readonly IVoucherService _voucherService;
-
-    public CreateModel(IVoucherService voucherService)
+    public class CreateModel : PageModel
     {
-        _voucherService = voucherService;
-    }
+        [BindProperty]
+        public VoucherEntryViewModel VoucherEntry { get; set; }
 
-    [BindProperty]
-    public List<VoucherModel> VoucherEntries { get; set; }
+        private readonly IVoucherService _voucherService;
 
-    public async Task<IActionResult> OnPostAsync()
-    {
-        if (!ModelState.IsValid)
+        public CreateModel(IVoucherService voucherService)
+        {
+            _voucherService = voucherService;
+        }
+
+        public void OnGet() { }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+                return Page();
+
+            bool success = await _voucherService.SaveVoucherAsync(VoucherEntry);
+            if (success)
+                return RedirectToPage("VoucherList");
+
+            ModelState.AddModelError("", "Save failed.");
             return Page();
-
-        await _voucherService.SaveVoucherAsync(VoucherEntries);
-
-        TempData["Success"] = "Vouchers saved successfully!";
-        return RedirectToPage("VoucherList");
+        }
     }
 }

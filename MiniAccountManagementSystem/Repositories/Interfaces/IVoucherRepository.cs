@@ -1,9 +1,10 @@
 ﻿using MiniAccountManagementSystem.Models;
+using MiniAccountManagementSystem.ViewModels;
 
 namespace MiniAccountManagementSystem.Repositories.Interfaces
 {
     public interface IVoucherRepository
     {
-        Task SaveVoucherAsync(List<VoucherModel> voucher);
+        Task<bool> SaveVoucherAsync(VoucherEntryViewModel model);
     }
 }

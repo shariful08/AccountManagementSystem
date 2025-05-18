@@ -1,46 +1,51 @@
 ﻿using Microsoft.Data.SqlClient;
 using MiniAccountManagementSystem.Models;
 using MiniAccountManagementSystem.Repositories.Interfaces;
+using MiniAccountManagementSystem.ViewModels;
 using System.Data;
+using System.Text.Json;
 
 namespace MiniAccountManagementSystem.Repositories.Implementations
 {
     public class VoucherRepository : IVoucherRepository
     {
-        private readonly string _connectionString;
+        private readonly IConfiguration _configuration;
 
         public VoucherRepository(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _configuration = configuration;
         }
-        public async Task SaveVoucherAsync(List<VoucherModel> voucher)
+
+        public async Task<bool> SaveVoucherAsync(VoucherEntryViewModel model)
         {
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand("sp_SaveVoucher", conn))
+            using SqlConnection conn = new(_configuration.GetConnectionString("DefaultConnection"));
+            await conn.OpenAsync();
+
+            try
             {
-                //cmd.CommandType = CommandType.StoredProcedure;
+                using var cmd = new SqlCommand("sp_SaveVoucher_JSON", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
-                //cmd.Parameters.AddWithValue("@VoucherType", voucher.VoucherType);
-                //cmd.Parameters.AddWithValue("@VoucherDate", voucher.VoucherDate);
-                //cmd.Parameters.AddWithValue("@ReferenceNo", voucher.ReferenceNo);
+                // Serialize details list to JSON
+                var voucherDetailsJson = JsonSerializer.Serialize(model.VoucherDetails);
 
-                //var table = new DataTable();
-                //table.Columns.Add("AccountID", typeof(int));
-                //table.Columns.Add("DebitAmount", typeof(decimal));
-                //table.Columns.Add("CreditAmount", typeof(decimal));
-                //table.Columns.Add("Narration", typeof(string));
+                cmd.Parameters.AddWithValue("@VoucherNo", model.VoucherMaster.VoucherNo);
+                cmd.Parameters.AddWithValue("@VoucherType", model.VoucherMaster.VoucherType);
+                cmd.Parameters.AddWithValue("@VoucherDate", model.VoucherMaster.VoucherDate);
+                cmd.Parameters.AddWithValue("@Narration", model.VoucherMaster.Narration ?? "");
+                cmd.Parameters.AddWithValue("@Remarks", model.VoucherMaster.Remarks ?? "");
+                cmd.Parameters.AddWithValue("@AddedBy", model.VoucherMaster.AddedBy ?? "System");
+                cmd.Parameters.AddWithValue("@AddedPc", model.VoucherMaster.AddedPc ?? Environment.MachineName);
+                cmd.Parameters.AddWithValue("@VoucherDetailsJson", voucherDetailsJson);
 
-                ////foreach (var line in voucher.VoucherDetails)
-                ////{
-                ////    table.Rows.Add(line.AccountID, line.DebitAmount, line.CreditAmount, line.Narration);
-                ////}
-
-                //var tvp = cmd.Parameters.AddWithValue("@VoucherDetails", table);
-                //tvp.SqlDbType = SqlDbType.Structured;
-                //tvp.TypeName = "VoucherDetailType";
-
-                //await conn.OpenAsync();
-                //await cmd.ExecuteNonQueryAsync();
+                await cmd.ExecuteNonQueryAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
