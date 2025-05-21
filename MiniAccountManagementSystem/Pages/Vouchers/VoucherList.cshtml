@@ -1,0 +1,36 @@
+﻿@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@model MiniAccountManagementSystem.Pages.Vouchers.VoucherListModel
+
+if (User.IsInRole("Admin,Accountant"))
+{
+<a asp-page="/Vouchers/Create" class="btn btn-info">Vouchers Entry</a>
+}
+
+
+<h2>Voucher List</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Voucher No</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Narration</th>
+            <th>Remarks</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Vouchers)
+        {
+            <tr>
+                <td>@item.VoucherNo</td>
+                <td>@item.VoucherDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.VoucherType</td>
+                <td>@item.Narration</td>
+                <td>@item.Remarks</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -58,7 +58,7 @@ namespace MiniAccountManagementSystem.Pages
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            return RedirectToPage("/Accounts/Index");
+            return RedirectToPage("/Vouchers/VoucherList");
         }
     }
 }

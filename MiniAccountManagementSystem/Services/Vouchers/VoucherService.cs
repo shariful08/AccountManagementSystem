@@ -16,4 +16,8 @@ public class VoucherService : IVoucherService
     {
         return await _repository.SaveVoucherAsync(model);
     }
+    public async Task<List<VoucherMaster>> GetAllVouchersAsync()
+    {
+        return await _repository.GetAllVouchersAsync();
+    }
 }

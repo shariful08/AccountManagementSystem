@@ -19,24 +19,24 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
 
-//// Authentication
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(options =>
-//    {
-//        options.LoginPath = "/Login"; // Redirect to login if not authenticated
-//        options.AccessDeniedPath = "/AccessDenied"; // If role is insufficient
-//    });
+// Authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Users/Login"; // Update this path to correct login page
+        options.AccessDeniedPath = "/AccessDenied"; // Optional
+    });
 
-//builder.Services.AddAuthorization();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-//// Redirect "/" to "/Login"
-//app.MapGet("/", context =>
-//{
-//    context.Response.Redirect("Users/Login");
-//    return Task.CompletedTask;
-//});
+// Redirect "/" to "/Users/Login"
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/Users/Login");
+    return Task.CompletedTask;
+});
 
 // Configure middleware pipeline
 if (!app.Environment.IsDevelopment())
@@ -50,8 +50,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseAuthentication();  
-//app.UseAuthorization();
+app.UseAuthentication();  // ✅ Required for login to work
+app.UseAuthorization();   // ✅ Required for [Authorize] to work
 
 app.MapRazorPages();
 

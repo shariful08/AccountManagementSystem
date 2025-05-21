@@ -10,15 +10,18 @@ namespace MiniAccountManagementSystem.Repositories.Implementations
     public class VoucherRepository : IVoucherRepository
     {
         private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
 
         public VoucherRepository(IConfiguration configuration)
         {
             _configuration = configuration;
+            _connectionString = _configuration.GetConnectionString("DefaultConnection");
+
         }
 
         public async Task<bool> SaveVoucherAsync(VoucherEntryViewModel model)
         {
-            using SqlConnection conn = new(_configuration.GetConnectionString("DefaultConnection"));
+            using SqlConnection conn = new(_connectionString);
             await conn.OpenAsync();
 
             try
@@ -47,6 +50,36 @@ namespace MiniAccountManagementSystem.Repositories.Implementations
             {
                 return false;
             }
+        }
+
+        public async Task<List<VoucherMaster>> GetAllVouchersAsync()
+        {
+            // Load from database
+            var vouchers = new List<VoucherMaster>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                var cmd = new SqlCommand("SELECT * FROM VoucherMaster", conn);
+                conn.Open();
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        vouchers.Add(new VoucherMaster
+                        {
+                            VoucherMasterId = reader.GetInt32(reader.GetOrdinal("VoucherMasterId")),
+                            VoucherNo = reader["VoucherNo"].ToString(),
+                            VoucherDate = reader.GetDateTime(reader.GetOrdinal("VoucherDate")),
+                            VoucherType = reader["VoucherType"].ToString(),
+                            Narration = reader["Narration"].ToString(),
+                            Remarks = reader["Remarks"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return vouchers;
         }
 
     }

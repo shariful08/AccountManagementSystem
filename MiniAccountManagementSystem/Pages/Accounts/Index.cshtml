@@ -1,8 +1,9 @@
 ﻿
 
 @page "/Accounts"
+@using Microsoft.AspNetCore.Authorization
 @model IndexModel
-
+@attribute [Authorize(Roles = "Admin,Accountant")]
 @{
     ViewData["Title"] = "Account List";
 }

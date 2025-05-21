@@ -1,5 +1,5 @@
 ﻿@page "{handler?}/{id?}"
-@attribute [Authorize(Roles = "admin")]
+@attribute [Authorize(Roles = "Admin,Accountant")]
 
 @using Microsoft.AspNetCore.Authorization
 @model MiniAccountManagementSystem.Pages.Accounts.CreateModel

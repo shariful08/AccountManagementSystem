@@ -6,5 +6,7 @@ namespace MiniAccountManagementSystem.Repositories.Interfaces
     public interface IVoucherRepository
     {
         Task<bool> SaveVoucherAsync(VoucherEntryViewModel model);
+        Task<List<VoucherMaster>> GetAllVouchersAsync();
+
     }
 }

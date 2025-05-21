@@ -1,4 +1,6 @@
 ﻿@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin,Accountant")]
 @model MiniAccountManagementSystem.Pages.Vouchers.CreateModel
 @{
     var accountOptions = string.Join("", Model.VoucherEntry.AccountList.Select(a =>
@@ -32,6 +34,7 @@
 
     <input type="submit" value="Save" class="btn btn-primary" />
 </form>
+<a asp-page="/Vouchers/VoucherList" class="btn btn-info">View Vouchers</a>
 
 @section Scripts {
     <script>
